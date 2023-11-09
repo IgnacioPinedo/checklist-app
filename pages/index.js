@@ -15,7 +15,7 @@ export default function Index() {
             Checklist App
           </h1>
           <h2 style={{ margin: '0 auto', width: 'fit-content', padding: '25px 0' }}>
-            🚧 IN CONSTRUCTION 🚧
+            🚧 UNDER CONSTRUCTION 🚧
           </h2>
         </Paper>
       </Container>
