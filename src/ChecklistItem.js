@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
 const ChecklistItem = (props) => {
+  const [checked, setChecked] = useState(false);
+
   const { item } = props;
-
-  const [checked, setChecked] = useState(item.checked);
-
 
   return (
     <div
@@ -13,8 +12,9 @@ const ChecklistItem = (props) => {
         borderTop: '2px solid #ddd',
         display: 'flex',
         alignItems: 'center',
+        cursor: 'pointer',
       }}
-      onClick={(prev) => setChecked(!prev)}
+      onClick={() => setChecked((prevChecked) => !prevChecked)}
     >
       <input type='checkbox' style={{ marginRight: '1rem' }} checked={checked} />
       <h3>{item.name}</h3>
