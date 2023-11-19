@@ -9,7 +9,13 @@ export default function Index() {
 
   const { id: checklistId } = router.query;
 
+  console.log(checklistId);
+
   useEffect(() => {
+    if (!checklistId) {
+      return;
+    }
+
     fetch(`/api/v1/checklists/${checklistId}`).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
