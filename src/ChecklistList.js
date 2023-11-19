@@ -4,9 +4,11 @@ const ChecklistList = (props) => {
   return (
     <div>
       {checklists.map((checklist) => (
-        <div key={checklist.id} style={{padding:'0.5rem 1.5rem', borderTop: '2px solid #ddd'}}>
+        <a key={checklist.id} style={{textDecoration: 'none', color: 'inherit'}} href={`/checklists/${checklist.id}`} >
+          <div style={{padding:'0.5rem 1.5rem', borderTop: '2px solid #ddd'}}>
           <h2 key={checklist.id}>{checklist.name}</h2>
-        </div>
+          </div>
+        </a>
       ))}
     </div>
   );
