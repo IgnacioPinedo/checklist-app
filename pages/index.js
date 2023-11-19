@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import ChecklistList from 'src/ChecklistList';
