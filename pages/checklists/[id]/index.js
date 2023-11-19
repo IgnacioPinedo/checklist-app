@@ -9,8 +9,6 @@ export default function Index() {
 
   const { id: checklistId } = router.query;
 
-  console.log(checklistId);
-
   useEffect(() => {
     if (!checklistId) {
       return;
