@@ -1,7 +1,21 @@
 import * as React from 'react';
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
+import ChecklistList from 'src/ChecklistList';
 
 export default function Index() {
+  const [checklists, setChecklists] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/v1/checklists').then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          setChecklists(data.data.checklists);
+        });
+      }
+    });
+  }, []);
+
   return (
     <>
       <Head>
@@ -14,13 +28,11 @@ export default function Index() {
           borderRadius: '1rem',
           boxShadow:
             '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
-            fontFamily: 'Montserrat, sans-serif'
+          fontFamily: 'Montserrat, sans-serif',
         }}
       >
-        <h1 style={{ margin: '0 auto', width: 'fit-content', paddingTop: '25px' }}>Checklister</h1>
-        <h2 style={{ margin: '0 auto', width: 'fit-content', padding: '25px 0' }}>
-          🚧 UNDER CONSTRUCTION 🚧
-        </h2>
+        <h1 style={{ margin: '0 auto', width: 'fit-content', padding: '2.5rem 0' }}>Checklister</h1>
+        <ChecklistList checklists={checklists} />
       </div>
     </>
   );

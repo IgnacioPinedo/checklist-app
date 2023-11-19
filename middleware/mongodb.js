@@ -9,9 +9,7 @@ const connectDB = (handler) => async (req, res) => {
 
   mongoose.set('strictQuery', true);
 
-  await mongoose.connect(DB, {
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(DB);
 
   return handler(req, res);
 };
