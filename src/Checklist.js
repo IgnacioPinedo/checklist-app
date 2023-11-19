@@ -1,4 +1,4 @@
-import ChecklistSection from './ChecklistSection';
+import ChecklistSection from 'src/ChecklistSection';
 
 const Checklist = (props) => {
   const { checklist } = props;
