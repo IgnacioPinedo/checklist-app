@@ -1,15 +1,13 @@
+import styles from 'styles/ChecklistList.module.css';
+
 const ChecklistList = (props) => {
   const { checklists } = props;
 
   return (
     <div>
       {checklists.map((checklist) => (
-        <a
-          key={checklist.id}
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          href={`/checklists/${checklist.id}`}
-        >
-          <div style={{ padding: '0.5rem 1.5rem', borderTop: '2px solid #ddd' }}>
+        <a key={checklist.id} className={styles.a} href={`/checklists/${checklist.id}`}>
+          <div className={styles['list-item']}>
             <h2 key={checklist.id}>{checklist.name}</h2>
           </div>
         </a>

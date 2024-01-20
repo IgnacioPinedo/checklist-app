@@ -1,11 +1,12 @@
 import ChecklistItem from 'src/ChecklistItem';
+import styles from 'styles/ChecklistSection.module.css';
 
 const ChecklistSection = (props) => {
   const { section } = props;
 
   return (
     <>
-      <div style={{ padding: '0.5rem 1.5rem', borderTop: '2px solid #ddd' }}>
+      <div className={styles.header}>
         <h2>{section.name}</h2>
       </div>
       {section.items.map((item) => (

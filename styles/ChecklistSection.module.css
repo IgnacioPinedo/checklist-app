@@ -1,0 +1,10 @@
+.header {
+  padding: 0.5rem 1.5rem;
+  border-top: 2px solid #ddd;
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    font-size: 0.8rem;
+  }
+}
