@@ -33,7 +33,10 @@ export default function Index() {
       <Head>
         <title>{`Checklister | ${checklist.name}`}</title>
       </Head>
-      <div className={styles.header}>
+      <div className={styles.card}>
+        <a className={styles.a} href='/'>
+          <div className={styles['back-button']}>Home</div>
+        </a>
         <h1 className={styles.h1}>{checklist.name}</h1>
         <Checklist checklist={checklist} />
       </div>
