@@ -35,7 +35,7 @@ export default function Index() {
       </Head>
       <div className={styles.card}>
         <a className={styles.a} href='/'>
-          <div className={styles['back-button']}>Home</div>
+          <span className='material-symbols-outlined'>home</span>
         </a>
         <h1 className={styles.h1}>{checklist.name}</h1>
         <Checklist checklist={checklist} />

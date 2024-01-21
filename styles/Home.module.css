@@ -19,6 +19,22 @@
   justify-content: flex-start;
 }
 
+.button {
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+}
+
+.a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
 @media screen and (max-width: 600px) {
   .header {
     padding: 1rem 2rem;
@@ -26,5 +42,9 @@
 
   .h1 {
     font-size: 1.5rem;
+  }
+
+  .a {
+    font-size: 0.8rem;
   }
 }

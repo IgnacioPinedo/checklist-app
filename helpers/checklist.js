@@ -100,6 +100,8 @@ export async function createChecklist(body) {
   });
 
   await createChecklistSections(checklist.id, body.sections);
+
+  return checklist.id;
 }
 
 const createChecklistSections = async (id, sections) => {

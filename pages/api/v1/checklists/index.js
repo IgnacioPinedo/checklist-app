@@ -18,10 +18,13 @@ const handler = async (req, res) => {
         });
 
       case 'POST':
-        await createChecklist(req.body);
+        const id = await createChecklist(req.body);
 
         return res.status(201).json({
           status: 'success',
+          data: {
+            id,
+          },
         });
       default:
         return res.status(404).json({});

@@ -24,6 +24,9 @@ export default function Index() {
       <div className={styles.card}>
         <div className={styles.header}>
           <h1 className={styles.h1}>Checklister</h1>
+          <a className={styles.a} href='/checklists/add'>
+            <div className={styles.button}>Add Checklist</div>
+          </a>
         </div>
         <ChecklistList checklists={checklists} />
       </div>
