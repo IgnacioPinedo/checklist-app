@@ -1,30 +1,15 @@
 // Middleware
-import connectDB from 'middleware/mongodb';
-
-// Helpers
-import { getChecklists, createChecklist } from 'helpers/checklist';
+import { protect } from 'middleware/auth';
 
 const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
-        const checklists = await getChecklists();
-
-        return res.status(200).json({
-          status: 'success',
-          data: {
-            checklists,
-          },
-        });
-
-      case 'POST':
         return protect(async (req, res) => {
-          const id = await createChecklist(req.body);
-
-          return res.status(201).json({
+          return res.status(200).json({
             status: 'success',
             data: {
-              id,
+              message: 'Verfied',
             },
           });
         })(req, res);
@@ -50,4 +35,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default connectDB(handler);
+export default handler;

@@ -9,9 +9,13 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 2rem 3rem;
+}
+
+.header-admin {
+  justify-content: space-between;
 }
 
 .h1 {

@@ -15,13 +15,17 @@ const handler = async (req, res) => {
           data: { checklist },
         });
       case 'PUT':
-        await updateChecklist(req.query.id, req.body);
+        return protect(async (req, res) => {
+          await updateChecklist(req.query.id, req.body);
 
-        return res.status(204).json();
+          return res.status(204).json();
+        })(req, res);
       case 'DELETE':
-        await deleteChecklist(req.query.id);
+        return protect(async (req, res) => {
+          await deleteChecklist(req.query.id);
 
-        return res.status(204).json();
+          return res.status(204).json();
+        })(req, res);
       default:
         return res.status(404).json({});
     }
