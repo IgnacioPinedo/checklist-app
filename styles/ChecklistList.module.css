@@ -23,6 +23,11 @@
   width: fit-content;
 }
 
+.list-icons a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .list-icons *:not(:last-child) {
   margin-right: 1rem;
 }
