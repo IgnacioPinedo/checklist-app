@@ -1,5 +1,6 @@
 // Middleware
 import connectDB from 'middleware/mongodb';
+import { protect } from 'middleware/auth';
 
 // Helpers
 import { getChecklists, createChecklist } from 'helpers/checklist';
