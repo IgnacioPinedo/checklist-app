@@ -188,3 +188,50 @@ const deleteChecklistSections = async (id) => {
 
   await ChecklistSection.deleteMany({ checklist: id });
 };
+
+export async function duplicateChecklist(id) {
+  const checklist = await Checklist.findById(id);
+
+  if (!checklist)
+    throw {
+      internalError: true,
+      status: 404,
+      data: {
+        error: "There's no checklist with this ID",
+      },
+    };
+
+  const newChecklist = await Checklist.create({
+    name: `${checklist.name} (Copy)`,
+  });
+
+  const checklistSections = await ChecklistSection.find({ checklist: checklist.id }).sort({
+    order: 'asc',
+  });
+
+  await Promise.all(
+    checklistSections.map(async (checklistSection) => {
+      const newChecklistSection = await ChecklistSection.create({
+        name: checklistSection.name,
+        order: checklistSection.order,
+        checklist: newChecklist.id,
+      });
+
+      const checklistItems = await ChecklistItem.find({
+        checklistSection: checklistSection.id,
+      }).sort({ order: 'asc' });
+
+      await Promise.all(
+        checklistItems.map(async (checklistItem) => {
+          await ChecklistItem.create({
+            name: checklistItem.name,
+            order: checklistItem.order,
+            checklistSection: newChecklistSection.id,
+          });
+        }),
+      );
+    }),
+  );
+
+  return newChecklist.id;
+}

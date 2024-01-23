@@ -1,9 +1,11 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import ChecklistList from 'src/ChecklistList';
 import styles from 'styles/Home.module.css';
 
 export default function Index() {
+  const router = useRouter();
   const [checklists, setChecklists] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState('');
@@ -37,6 +39,19 @@ export default function Index() {
     }
   };
 
+  const handleDuplicateChecklist = async (id) => {
+    const response = await fetch(`/api/v1/checklists/${id}/duplicate`, { method: 'POST' });
+
+    if (response.ok) {
+      const data = await response.json();
+      router.push(`/checklists/${data.data.id}`);
+    } else {
+      const data = await response.json();
+      setError(data.data.error);
+      setTimeout(() => setError(''), 5000);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -60,6 +75,7 @@ export default function Index() {
           checklists={checklists}
           isAdmin={isAdmin}
           deleteChecklist={handleDeleteChecklist}
+          duplicateChecklist={handleDuplicateChecklist}
         />
       </div>
     </>

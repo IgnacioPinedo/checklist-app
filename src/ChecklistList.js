@@ -1,10 +1,14 @@
 import styles from 'styles/ChecklistList.module.css';
 
 const ChecklistList = (props) => {
-  const { checklists, isAdmin, deleteChecklist } = props;
+  const { checklists, isAdmin, deleteChecklist, duplicateChecklist } = props;
 
   const handleDeleteChecklist = (id) => {
     deleteChecklist(id);
+  };
+
+  const handleDuplicateChecklist = (id) => {
+    duplicateChecklist(id);
   };
 
   return (
@@ -16,16 +20,16 @@ const ChecklistList = (props) => {
               <h2 key={checklist.id}>{checklist.name}</h2>
             </a>
             {isAdmin && (
-              <span
-                className='material-symbols-outlined'
-                onClick={() => handleDeleteChecklist(checklist.id)}
-              >
-                delete
-              </span>
               <div className={styles['list-icons']}>
                 <a href={`/checklists/${checklist.id}/edit`}>
                   <span className='material-symbols-outlined'>edit</span>
                 </a>
+                <span
+                  className='material-symbols-outlined'
+                  onClick={() => handleDuplicateChecklist(checklist.id)}
+                >
+                  content_copy
+                </span>
                 <span
                   className='material-symbols-outlined'
                   onClick={() => handleDeleteChecklist(checklist.id)}
