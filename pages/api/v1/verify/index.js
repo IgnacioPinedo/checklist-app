@@ -5,7 +5,7 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
-        return protect(async (req, res) => {
+        return await protect(async (req, res) => {
           return res.status(200).json({
             status: 'success',
             data: {

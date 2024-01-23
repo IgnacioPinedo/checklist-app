@@ -7,6 +7,13 @@
   padding: 0.5rem 1.5rem;
   border-top: 2px solid #ddd;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list-item span {
+  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {

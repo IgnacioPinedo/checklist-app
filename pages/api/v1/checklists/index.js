@@ -19,7 +19,7 @@ const handler = async (req, res) => {
         });
 
       case 'POST':
-        return protect(async (req, res) => {
+        return await protect(async (req, res) => {
           const id = await createChecklist(req.body);
 
           return res.status(201).json({

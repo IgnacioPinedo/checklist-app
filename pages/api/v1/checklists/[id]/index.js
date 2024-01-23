@@ -16,13 +16,13 @@ const handler = async (req, res) => {
           data: { checklist },
         });
       case 'PUT':
-        return protect(async (req, res) => {
+        return await protect(async (req, res) => {
           await updateChecklist(req.query.id, req.body);
 
           return res.status(204).json();
         })(req, res);
       case 'DELETE':
-        return protect(async (req, res) => {
+        return await protect(async (req, res) => {
           await deleteChecklist(req.query.id);
 
           return res.status(204).json();
