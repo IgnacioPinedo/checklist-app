@@ -16,6 +16,17 @@
   cursor: pointer;
 }
 
+.list-icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: fit-content;
+}
+
+.list-icons *:not(:last-child) {
+  margin-right: 1rem;
+}
+
 @media screen and (max-width: 600px) {
   .list-item {
     font-size: 0.8rem;

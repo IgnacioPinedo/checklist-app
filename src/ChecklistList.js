@@ -22,6 +22,17 @@ const ChecklistList = (props) => {
               >
                 delete
               </span>
+              <div className={styles['list-icons']}>
+                <a href={`/checklists/${checklist.id}/edit`}>
+                  <span className='material-symbols-outlined'>edit</span>
+                </a>
+                <span
+                  className='material-symbols-outlined'
+                  onClick={() => handleDeleteChecklist(checklist.id)}
+                >
+                  delete
+                </span>
+              </div>
             )}
           </div>
         </>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from 'styles/ChecklistForm.module.css';
 
 const initialChecklist = {
@@ -17,12 +17,16 @@ const initialChecklist = {
   ],
 };
 
-const ChecklistForm = ({ addChecklist, error }) => {
+const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButtonValue }) => {
   const [checklist, setChecklist] = useState(initialChecklist);
+
+  useEffect(() => {
+    if (existingChecklist) setChecklist(existingChecklist);
+  }, [existingChecklist]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addChecklist(checklist);
+    submitChecklist(checklist);
   };
 
   const handleSetName = (e) => {
@@ -191,7 +195,7 @@ const ChecklistForm = ({ addChecklist, error }) => {
         </div>
       ))}
       <div className={styles['form-footer']}>
-        <input className={styles.submit} type='submit' value='Add Checklist' />
+        <input className={styles.submit} type='submit' value={submitButtonValue} />
         {error && <p className={styles.error}>{error}</p>}
       </div>
     </form>

@@ -25,8 +25,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  min-width: fit-content;
-  width: 10%;
+  width: fit-content;
+}
+
+.form-icons span:not(:last-child) {
+  margin-right: 1rem;
 }
 
 .label {

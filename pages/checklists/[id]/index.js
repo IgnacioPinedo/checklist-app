@@ -20,6 +20,8 @@ export default function Index() {
         response.json().then((data) => {
           setChecklist(data.data.checklist);
         });
+      } else {
+        router.push('/');
       }
     });
   }, [checklistId]);

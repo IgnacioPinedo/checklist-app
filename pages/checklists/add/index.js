@@ -37,7 +37,7 @@ export default function Index() {
           <span className='material-symbols-outlined'>home</span>
         </a>
         <h1 className={styles.h1}>Add Checklist</h1>
-        <CheckListForm addChecklist={handleAddChecklist} error={error} />
+        <CheckListForm submitChecklist={handleAddChecklist} error={error} submitButtonValue='Add Checklist' />
       </div>
     </>
   );
