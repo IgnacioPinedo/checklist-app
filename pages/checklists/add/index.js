@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import CheckListForm from 'src/ChecklistForm';
@@ -33,9 +34,9 @@ export default function Index() {
         <title>Checklister | Add Checklist</title>
       </Head>
       <div className={styles.card}>
-        <a className={styles.a} href='/'>
+        <Link className={styles.a} href='/'>
           <span className='material-symbols-outlined'>home</span>
-        </a>
+        </Link>
         <h1 className={styles.h1}>Add Checklist</h1>
         <CheckListForm submitChecklist={handleAddChecklist} error={error} submitButtonValue='Add Checklist' />
       </div>

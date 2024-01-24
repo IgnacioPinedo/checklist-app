@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Checklist from 'src/Checklist';
@@ -24,7 +25,7 @@ export default function Index() {
         router.push('/');
       }
     });
-  }, [checklistId]);
+  }, [checklistId, router]);
 
   if (!checklist) {
     return null;
@@ -36,9 +37,9 @@ export default function Index() {
         <title>{`Checklister | ${checklist.name}`}</title>
       </Head>
       <div className={styles.card}>
-        <a className={styles.a} href='/'>
+        <Link className={styles.a} href='/'>
           <span className='material-symbols-outlined'>home</span>
-        </a>
+        </Link>
         <h1 className={styles.h1}>{checklist.name}</h1>
         <Checklist checklist={checklist} />
       </div>

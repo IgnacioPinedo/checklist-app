@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import ChecklistList from 'src/ChecklistList';
@@ -66,9 +67,9 @@ export default function Index() {
         <div className={`${styles.header} ${isAdmin ? styles['header-admin'] : ''}`}>
           <h1 className={styles.h1}>Checklister</h1>
           {isAdmin && (
-            <a className={styles.a} href='/checklists/add'>
+            <Link className={styles.a} href='/checklists/add'>
               <div className={styles.button}>Add Checklist</div>
-            </a>
+            </Link>
           )}
         </div>
         <ChecklistList
