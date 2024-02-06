@@ -66,6 +66,8 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
     setChecklist((prevState) => {
       const sections = [...prevState.sections];
 
+      if (sections.length === 1) return prevState;
+
       sections.splice(sectionIndex, 1);
 
       for (let i = 0; i < sections.length; i++) {
@@ -112,6 +114,8 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
       const sections = [...prevState.sections];
 
       const items = [...sections[sectionIndex].items];
+
+      if (items.length === 1) return prevState;
 
       items.splice(itemIndex, 1);
 
