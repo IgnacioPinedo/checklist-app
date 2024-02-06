@@ -62,6 +62,20 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
     });
   };
 
+  const handleDuplicateSection = (sectionIndex) => {
+    setChecklist((prevState) => {
+      const sections = [...prevState.sections];
+
+      const newSection = { ...sections[sectionIndex] };
+
+      newSection.order = sections.sort((a, b) => a.order - b.order)[sections.length - 1].order + 1;
+
+      sections.push(newSection);
+
+      return { ...prevState, sections };
+    });
+  }
+
   const handleRemoveSection = (sectionIndex) => {
     setChecklist((prevState) => {
       const sections = [...prevState.sections];
@@ -151,6 +165,12 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
               <span className='material-symbols-outlined' onClick={handleAddSection}>
                 add
               </span>
+                <span
+                  className='material-symbols-outlined'
+                  onClick={() => handleDuplicateSection(sectionIndex)}
+                >
+                  content_copy
+                </span>
               <span
                 className='material-symbols-outlined'
                 onClick={() => handleRemoveSection(sectionIndex)}
