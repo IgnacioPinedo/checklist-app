@@ -130,11 +130,6 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
       <div className={styles['form-main']}>
         <div className={styles['form-main-header']}>
           <label className={styles.label}>Checklist</label>
-          <div>
-            <span className='material-symbols-outlined' onClick={handleAddSection}>
-              add
-            </span>
-          </div>
         </div>
         <input
           type='text'
@@ -149,10 +144,7 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
           <div className={styles['form-main-header']}>
             <label className={styles.label}>{`Section ${sectionIndex + 1}`}</label>
             <div className={styles['form-icons']}>
-              <span
-                className='material-symbols-outlined'
-                onClick={() => handleAddItem(sectionIndex)}
-              >
+              <span className='material-symbols-outlined' onClick={handleAddSection}>
                 add
               </span>
               <span
@@ -174,7 +166,13 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
             <div key={`section-item-${itemIndex}`} className={styles['form-item']}>
               <div className={styles['form-main-header']}>
                 <label className={styles.label}>{`Item ${itemIndex + 1}`}</label>
-                <div>
+                <div className={styles['form-icons']}>
+                  <span
+                    className='material-symbols-outlined'
+                    onClick={() => handleAddItem(sectionIndex)}
+                  >
+                    add
+                  </span>
                   <span
                     className='material-symbols-outlined'
                     onClick={() => handleRemoveItem(sectionIndex, itemIndex)}
