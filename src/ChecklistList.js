@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import styles from 'styles/ChecklistList.module.css';
+import DeleteChecklistPopup from 'src/DeleteChecklistPopup';
 
 const ChecklistList = (props) => {
+  const [deleteId, setDeleteId] = useState(null);
   const { checklists, isAdmin, deleteChecklist, duplicateChecklist } = props;
 
   const handleDeleteChecklist = (id) => {
-    deleteChecklist(id);
+    setDeleteId(id);
   };
 
   const handleDuplicateChecklist = (id) => {
@@ -13,6 +16,17 @@ const ChecklistList = (props) => {
 
   return (
     <div>
+      {deleteId && (
+        <DeleteChecklistPopup
+          id={deleteId}
+          checklistName={checklists.find((checklist) => checklist.id === deleteId).name}
+          deleteChecklist={() => {
+            setDeleteId(null);
+            deleteChecklist(deleteId);
+          }}
+          cancel={() => setDeleteId(null)}
+        />
+      )}
       {checklists.map((checklist) => (
         <>
           <div className={styles['list-item']}>
