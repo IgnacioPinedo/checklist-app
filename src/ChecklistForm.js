@@ -74,7 +74,7 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
 
       return { ...prevState, sections };
     });
-  }
+  };
 
   const handleRemoveSection = (sectionIndex) => {
     setChecklist((prevState) => {
@@ -165,12 +165,12 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
               <span className='material-symbols-outlined' onClick={handleAddSection}>
                 add
               </span>
-                <span
-                  className='material-symbols-outlined'
-                  onClick={() => handleDuplicateSection(sectionIndex)}
-                >
-                  content_copy
-                </span>
+              <span
+                className='material-symbols-outlined'
+                onClick={() => handleDuplicateSection(sectionIndex)}
+              >
+                content_copy
+              </span>
               <span
                 className='material-symbols-outlined'
                 onClick={() => handleRemoveSection(sectionIndex)}
