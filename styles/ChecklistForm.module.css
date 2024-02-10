@@ -28,6 +28,10 @@
   width: fit-content;
 }
 
+.form-icons span {
+  cursor: pointer;
+}
+
 .form-icons span:not(:last-child) {
   margin-right: 1rem;
 }
