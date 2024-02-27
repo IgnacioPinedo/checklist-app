@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from 'styles/ChecklistForm.module.css';
+import ChecklistFormSection from './ChecklistFormSection';
 
 const initialChecklist = {
   name: '',
@@ -77,6 +78,8 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
   };
 
   const handleRemoveSection = (sectionIndex) => {
+    if (checklist.sections.length === 1) return;
+
     setChecklist((prevState) => {
       const sections = [...prevState.sections];
 
@@ -124,6 +127,8 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
   };
 
   const handleRemoveItem = (sectionIndex, itemIndex) => {
+    if (checklist.sections[sectionIndex].items.length === 1) return;
+
     setChecklist((prevState) => {
       const sections = [...prevState.sections];
 
@@ -158,63 +163,18 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
         />
       </div>
       {checklist.sections.map((section, sectionIndex) => (
-        <div key={`section-${sectionIndex}`} className={styles['form-main']}>
-          <div className={styles['form-main-header']}>
-            <label className={styles.label}>{`Section ${sectionIndex + 1}`}</label>
-            <div className={styles['form-icons']}>
-              <span className='material-symbols-outlined' onClick={handleAddSection}>
-                add
-              </span>
-              <span
-                className='material-symbols-outlined'
-                onClick={() => handleDuplicateSection(sectionIndex)}
-              >
-                content_copy
-              </span>
-              <span
-                className='material-symbols-outlined'
-                onClick={() => handleRemoveSection(sectionIndex)}
-              >
-                delete
-              </span>
-            </div>
-          </div>
-          <input
-            type='text'
-            className={styles.input}
-            value={section.name}
-            onChange={(e) => handleSetSectionName(e, sectionIndex)}
-            placeholder='Section Name'
-          />
-          {section.items.map((item, itemIndex) => (
-            <div key={`section-item-${itemIndex}`} className={styles['form-item']}>
-              <div className={styles['form-main-header']}>
-                <label className={styles.label}>{`Item ${itemIndex + 1}`}</label>
-                <div className={styles['form-icons']}>
-                  <span
-                    className='material-symbols-outlined'
-                    onClick={() => handleAddItem(sectionIndex)}
-                  >
-                    add
-                  </span>
-                  <span
-                    className='material-symbols-outlined'
-                    onClick={() => handleRemoveItem(sectionIndex, itemIndex)}
-                  >
-                    delete
-                  </span>
-                </div>
-              </div>
-              <input
-                type='text'
-                className={styles.input}
-                value={item.name}
-                onChange={(e) => handleSetItemName(e, sectionIndex, itemIndex)}
-                placeholder='Item Name'
-              />
-            </div>
-          ))}
-        </div>
+        <ChecklistFormSection
+          key={`section-${sectionIndex}`}
+          section={section}
+          sectionIndex={sectionIndex}
+          handleAddSection={handleAddSection}
+          handleRemoveSection={handleRemoveSection}
+          handleDuplicateSection={handleDuplicateSection}
+          handleSetSectionName={handleSetSectionName}
+          handleAddItem={handleAddItem}
+          handleRemoveItem={handleRemoveItem}
+          handleSetItemName={handleSetItemName}
+        />
       ))}
       <div className={styles['form-footer']}>
         <input className={styles.submit} type='submit' value={submitButtonValue} />
