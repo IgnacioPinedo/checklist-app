@@ -7,11 +7,24 @@ const ChecklistFormItem = ({
   handleAddItem,
   handleRemoveItem,
   handleSetItemName,
+  dragSectionItemStart,
+  dragSectionItemEnter,
+  dropSectionItem,
 }) => {
   return (
-    <div className={styles['form-item']}>
-      <div className={styles['form-main-header']}>
-        <label className={styles.label}>{`Item ${itemIndex + 1}`}</label>
+    <div
+      className={styles['form-item']}
+      draggable
+      onDragStart={dragSectionItemStart}
+      onDragEnter={dragSectionItemEnter}
+      onDragEnd={dropSectionItem}
+      data-index={itemIndex}
+    >
+      <div className={styles['form-main-title']}>
+        <div>
+          <span className='material-symbols-outlined'>drag_indicator</span>
+          <label className={styles.label}>{`Item ${itemIndex + 1}`}</label>
+        </div>
         <div className={styles['form-icons']}>
           <span className='material-symbols-outlined' onClick={() => handleAddItem(sectionIndex)}>
             add

@@ -20,6 +20,8 @@ const initialChecklist = {
 
 const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButtonValue }) => {
   const [checklist, setChecklist] = useState(initialChecklist);
+  const [dragSectionIndex, setDragSectionIndex] = useState(null);
+  const [dragOverSectionIndex, setDragOverSectionIndex] = useState(null);
 
   useEffect(() => {
     if (existingChecklist) setChecklist(existingChecklist);
@@ -148,10 +150,60 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
     });
   };
 
+  const handleSectionItemDrop = (sectionIndex, dragItemIndex, dropItemIndex) => {
+    setChecklist((prevState) => {
+      const sections = [...prevState.sections];
+
+      const items = [...sections[sectionIndex].items];
+
+      const dragItem = items.splice(dragItemIndex, 1)[0];
+
+      items.splice(dropItemIndex, 0, dragItem);
+
+      for (let i = 0; i < items.length; i++) {
+        items[i] = { ...items[i], order: i };
+      }
+
+      sections[sectionIndex] = { ...sections[sectionIndex], items };
+
+      return { ...prevState, sections };
+    });
+  }
+
+  const handleSectionDrop = (dragIndex, dropIndex) => {
+    setChecklist((prevState) => {
+      const sections = [...prevState.sections];
+
+      const dragSection = sections.splice(dragIndex, 1)[0];
+
+      sections.splice(dropIndex, 0, dragSection);
+
+      for (let i = 0; i < sections.length; i++) {
+        sections[i] = { ...sections[i], order: i };
+      }
+
+      return { ...prevState, sections };
+    });
+  }
+
+  const dragSectionStart = (e) => {
+    setDragSectionIndex(e.target.dataset.index);
+  }
+
+  const dragSectionEnter = (e) => {
+    setDragOverSectionIndex(e.currentTarget.dataset.index);
+  }
+
+  const dropSection = () => {
+    handleSectionDrop(dragSectionIndex, dragOverSectionIndex);
+    setDragSectionIndex(null);
+    setDragOverSectionIndex(null);
+  }
+
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles['form-main']}>
-        <div className={styles['form-main-header']}>
+      <div className={`${styles['form-main']} ${styles['form-main-header']}`}>
+        <div className={styles['form-main-title']}>
           <label className={styles.label}>Checklist</label>
         </div>
         <input
@@ -171,9 +223,13 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
           handleRemoveSection={handleRemoveSection}
           handleDuplicateSection={handleDuplicateSection}
           handleSetSectionName={handleSetSectionName}
+          handleSectionItemDrop={handleSectionItemDrop}
           handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}
           handleSetItemName={handleSetItemName}
+          dragSectionStart={dragSectionStart}
+          dragSectionEnter={dragSectionEnter}
+          dropSection={dropSection}
         />
       ))}
       <div className={styles['form-footer']}>
