@@ -62,6 +62,9 @@ const ChecklistFormSection = ({
             <span
               className='material-symbols-outlined'
               onClick={() => handleRemoveSection(sectionIndex)}
+              style={{
+                color: '#C9101C',
+              }}
             >
               delete
             </span>

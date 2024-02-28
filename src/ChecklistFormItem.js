@@ -32,6 +32,9 @@ const ChecklistFormItem = ({
           <span
             className='material-symbols-outlined'
             onClick={() => handleRemoveItem(sectionIndex, itemIndex)}
+            style={{
+              color: '#C9101C',
+            }}
           >
             delete
           </span>
