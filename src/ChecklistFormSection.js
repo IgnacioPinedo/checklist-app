@@ -5,17 +5,16 @@ import ChecklistFormItem from './ChecklistFormItem';
 const ChecklistFormSection = ({
   section,
   sectionIndex,
-  handleAddSection,
   handleRemoveSection,
   handleDuplicateSection,
   handleSetSectionName,
   handleSectionItemDrop,
-  handleAddItem,
   handleRemoveItem,
   handleSetItemName,
   dragSectionStart,
   dragSectionEnter,
   dropSection,
+  lastSection,
 }) => {
   const [dragItemIndex, setDragItemIndex] = useState(null);
   const [dragOverItemIndex, setDragOverItemIndex] = useState(null);
@@ -34,6 +33,40 @@ const ChecklistFormSection = ({
     setDragOverItemIndex(null);
   };
 
+  if (lastSection)
+    return (
+      <div className={styles['form-main']}>
+        <div className={styles['form-main-header']}>
+          <div className={styles['form-main-title']}>
+            <div>
+              <label className={styles.label}>New Section</label>
+            </div>
+          </div>
+          <input
+            type='text'
+            className={styles.input}
+            value={section.name}
+            onChange={(e) => handleSetSectionName(e, sectionIndex)}
+            placeholder='Section Name'
+          />
+        </div>
+        {section.items.map((item, itemIndex, items) => (
+          <ChecklistFormItem
+            key={`section-item-${itemIndex}`}
+            sectionIndex={sectionIndex}
+            item={item}
+            itemIndex={itemIndex}
+            handleRemoveItem={handleRemoveItem}
+            handleSetItemName={handleSetItemName}
+            dragSectionItemStart={dragSectionItemStart}
+            dragSectionItemEnter={dragSectionItemEnter}
+            dropSectionItem={dropSectionItem}
+            lastItem={itemIndex === items.length - 1}
+          />
+        ))}
+      </div>
+    );
+
   return (
     <div
       className={styles['form-main']}
@@ -50,9 +83,6 @@ const ChecklistFormSection = ({
             <label className={styles.label}>{`Section ${sectionIndex + 1}`}</label>
           </div>
           <div className={styles['form-icons']}>
-            <span className='material-symbols-outlined' onClick={handleAddSection}>
-              add
-            </span>
             <span
               className='material-symbols-outlined'
               onClick={() => handleDuplicateSection(sectionIndex)}
@@ -78,18 +108,18 @@ const ChecklistFormSection = ({
           placeholder='Section Name'
         />
       </div>
-      {section.items.map((item, itemIndex) => (
+      {section.items.map((item, itemIndex, items) => (
         <ChecklistFormItem
           key={`section-item-${itemIndex}`}
           sectionIndex={sectionIndex}
           item={item}
           itemIndex={itemIndex}
-          handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}
           handleSetItemName={handleSetItemName}
           dragSectionItemStart={dragSectionItemStart}
           dragSectionItemEnter={dragSectionItemEnter}
           dropSectionItem={dropSectionItem}
+          lastItem={itemIndex === items.length - 1}
         />
       ))}
     </div>
