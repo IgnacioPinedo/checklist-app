@@ -8,31 +8,16 @@ const ChecklistFormSection = ({
   handleRemoveSection,
   handleDuplicateSection,
   handleSetSectionName,
-  handleSectionItemDrop,
   handleRemoveItem,
   handleSetItemName,
   dragSectionStart,
   dragSectionEnter,
   dropSection,
   lastSection,
+  dragSectionItemStart,
+  dragSectionItemEnter,
+  dropSectionItem,
 }) => {
-  const [dragItemIndex, setDragItemIndex] = useState(null);
-  const [dragOverItemIndex, setDragOverItemIndex] = useState(null);
-
-  const dragSectionItemStart = (e) => {
-    setDragItemIndex(e.target.dataset.index);
-  };
-
-  const dragSectionItemEnter = (e) => {
-    setDragOverItemIndex(e.currentTarget.dataset.index);
-  };
-
-  const dropSectionItem = () => {
-    handleSectionItemDrop(sectionIndex, dragItemIndex, dragOverItemIndex);
-    setDragItemIndex(null);
-    setDragOverItemIndex(null);
-  };
-
   if (lastSection)
     return (
       <div className={styles['form-main']}>
@@ -74,7 +59,7 @@ const ChecklistFormSection = ({
       onDragStart={dragSectionStart}
       onDragEnter={dragSectionEnter}
       onDragEnd={dropSection}
-      data-index={sectionIndex}
+      data-section-index={sectionIndex}
     >
       <div className={styles['form-main-header']}>
         <div className={styles['form-main-title']}>

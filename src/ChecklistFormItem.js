@@ -36,7 +36,8 @@ const ChecklistFormItem = ({
       onDragStart={dragSectionItemStart}
       onDragEnter={dragSectionItemEnter}
       onDragEnd={dropSectionItem}
-      data-index={itemIndex}
+      data-section-index={sectionIndex}
+      data-item-index={itemIndex}
     >
       <div className={styles['form-main-title']}>
         <div>
