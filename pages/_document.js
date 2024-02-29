@@ -19,6 +19,7 @@ export default function Document() {
         style={{
           backgroundColor: '#3D3D3D',
           color: 'white',
+          margin: 0,
         }}
       >
         <Main />

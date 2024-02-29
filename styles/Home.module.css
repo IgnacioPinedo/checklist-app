@@ -1,6 +1,11 @@
+.wrapper {
+  max-width: calc(900px + 2rem);
+  margin: auto;
+}
+
 .card {
   max-width: 900px;
-  margin: 1rem auto;
+  margin: 1rem 1rem;
   border-radius: 1rem;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
     0px 1px 10px 0px rgba(0, 0, 0, 0.12);
@@ -57,11 +62,17 @@
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   padding: 1rem 2rem;
-  background-color: #3D3D3D;
+  background-color: #3d3d3d;
   text-align: center;
 }
 
 @media screen and (max-width: 600px) {
+  .card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
   .header {
     padding: 1rem 2rem;
   }
