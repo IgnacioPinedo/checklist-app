@@ -63,21 +63,23 @@ export default function Index() {
           <div className={styles['error-popup-content']}>{error}</div>
         </div>
       )}
-      <div className={styles.card}>
-        <div className={`${styles.header} ${isAdmin ? styles['header-admin'] : ''}`}>
-          <h1 className={styles.h1}>Checklister</h1>
-          {isAdmin && (
-            <Link className={styles.a} href='/checklists/add'>
-              <div className={styles.button}>Add Checklist</div>
-            </Link>
-          )}
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <div className={`${styles.header} ${isAdmin ? styles['header-admin'] : ''}`}>
+            <h1 className={styles.h1}>Checklister</h1>
+            {isAdmin && (
+              <Link className={styles.a} href='/checklists/add'>
+                <div className={styles.button}>Add Checklist</div>
+              </Link>
+            )}
+          </div>
+          <ChecklistList
+            checklists={checklists}
+            isAdmin={isAdmin}
+            deleteChecklist={handleDeleteChecklist}
+            duplicateChecklist={handleDuplicateChecklist}
+          />
         </div>
-        <ChecklistList
-          checklists={checklists}
-          isAdmin={isAdmin}
-          deleteChecklist={handleDeleteChecklist}
-          duplicateChecklist={handleDuplicateChecklist}
-        />
       </div>
     </>
   );

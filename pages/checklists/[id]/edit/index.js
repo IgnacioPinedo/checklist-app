@@ -57,17 +57,19 @@ export default function Index() {
       <Head>
         <title>Checklister | Add Checklist</title>
       </Head>
-      <div className={styles.card}>
-        <Link className={styles.a} href='/'>
-          <span className='material-symbols-outlined'>home</span>
-        </Link>
-        <h1 className={styles.h1}>Edit Checklist</h1>
-        <CheckListForm
-          submitChecklist={handleUpdateChecklist}
-          error={error}
-          existingChecklist={existingChecklist}
-          submitButtonValue='Update Checklist'
-        />
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <Link className={styles.a} href='/'>
+            <span className='material-symbols-outlined'>home</span>
+          </Link>
+          <h1 className={styles.h1}>Edit Checklist</h1>
+          <CheckListForm
+            submitChecklist={handleUpdateChecklist}
+            error={error}
+            existingChecklist={existingChecklist}
+            submitButtonValue='Update Checklist'
+          />
+        </div>
       </div>
     </>
   );

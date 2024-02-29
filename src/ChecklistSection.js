@@ -20,7 +20,13 @@ const ChecklistSection = (props) => {
       <div className={styles.header}>
         <h2>{section.name}</h2>
         <div className={styles['form-icons']}>
-          <span class='material-symbols-outlined' onClick={toggleDoneAll}>done_all</span>
+          <span
+            class='material-symbols-outlined'
+            onClick={toggleDoneAll}
+            style={{ color: '#13CC35' }}
+          >
+            done_all
+          </span>
           {collapsed ? (
             <span className='material-symbols-outlined' onClick={toggleCollapsed}>
               expand_less

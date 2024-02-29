@@ -36,12 +36,14 @@ export default function Index() {
       <Head>
         <title>{`Checklister | ${checklist.name}`}</title>
       </Head>
-      <div className={styles.card}>
-        <Link className={styles.a} href='/'>
-          <span className='material-symbols-outlined'>home</span>
-        </Link>
-        <h1 className={styles.h1}>{checklist.name}</h1>
-        <Checklist checklist={checklist} />
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <Link className={styles.a} href='/'>
+            <span className='material-symbols-outlined'>home</span>
+          </Link>
+          <h1 className={styles.h1}>{checklist.name}</h1>
+          <Checklist checklist={checklist} />
+        </div>
       </div>
     </>
   );

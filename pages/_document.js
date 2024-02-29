@@ -15,7 +15,13 @@ export default function Document() {
           href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap'
         />
       </Head>
-      <body>
+      <body
+        style={{
+          backgroundColor: '#3D3D3D',
+          color: 'white',
+          margin: 0,
+        }}
+      >
         <Main />
         <NextScript />
       </body>

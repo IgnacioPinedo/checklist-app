@@ -47,6 +47,9 @@ const ChecklistList = (props) => {
                 <span
                   className='material-symbols-outlined'
                   onClick={() => handleDeleteChecklist(checklist.id)}
+                  style={{
+                    color: '#C9101C',
+                  }}
                 >
                   delete
                 </span>

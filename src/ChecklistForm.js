@@ -20,27 +20,22 @@ const initialChecklist = {
 
 const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButtonValue }) => {
   const [checklist, setChecklist] = useState(initialChecklist);
+  const [dragSectionIndex, setDragSectionIndex] = useState(null);
+  const [dragOverSectionIndex, setDragOverSectionIndex] = useState(null);
+  const [dragSectionItem, setDragSectionItem] = useState(null);
+  const [dragOverSectionItem, setDragOverSectionItem] = useState(null);
 
   useEffect(() => {
-    if (existingChecklist) setChecklist(existingChecklist);
-  }, [existingChecklist]);
+    if (existingChecklist) {
+      const sections = existingChecklist.sections.map((section) => {
+        return { ...section, items: [...section.items, { name: '', order: section.items.length }] };
+      });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    submitChecklist(checklist);
-  };
+      const updatedChecklist = { ...existingChecklist, sections };
 
-  const handleSetName = (e) => {
-    setChecklist({ ...checklist, name: e.target.value });
-  };
-
-  const handleAddSection = () => {
-    setChecklist((prevState) => {
-      const sections = [...prevState.sections];
-
-      sections.push({
+      updatedChecklist.sections.push({
         name: '',
-        order: sections.sort((a, b) => a.order - b.order)[sections.length - 1].order + 1,
+        order: updatedChecklist.sections.length,
         items: [
           {
             name: '',
@@ -49,8 +44,30 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
         ],
       });
 
-      return { ...prevState, sections };
+      setChecklist(updatedChecklist);
+    }
+  }, [existingChecklist]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    let sections = [...checklist.sections];
+
+    sections.pop();
+
+    sections = sections.map((section) => {
+      const items = [...section.items];
+
+      items.pop();
+
+      return { ...section, items };
     });
+
+    submitChecklist({ ...checklist, sections });
+  };
+
+  const handleSetName = (e) => {
+    setChecklist({ ...checklist, name: e.target.value });
   };
 
   const handleSetSectionName = (e, sectionIndex) => {
@@ -58,6 +75,19 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
       const sections = [...prevState.sections];
 
       sections[sectionIndex] = { ...sections[sectionIndex], name: e.target.value };
+
+      if (sectionIndex === sections.length - 1) {
+        sections.push({
+          name: '',
+          order: sections.sort((a, b) => a.order - b.order)[sections.length - 1].order + 1,
+          items: [
+            {
+              name: '',
+              order: 0,
+            },
+          ],
+        });
+      }
 
       return { ...prevState, sections };
     });
@@ -95,23 +125,6 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
     });
   };
 
-  const handleAddItem = (sectionIndex) => {
-    setChecklist((prevState) => {
-      const sections = [...prevState.sections];
-
-      const items = [...sections[sectionIndex].items];
-
-      items.push({
-        name: '',
-        order: items.sort((a, b) => a.order - b.order)[items.length - 1].order + 1,
-      });
-
-      sections[sectionIndex] = { ...sections[sectionIndex], items };
-
-      return { ...prevState, sections };
-    });
-  };
-
   const handleSetItemName = (e, sectionIndex, itemIndex) => {
     setChecklist((prevState) => {
       const sections = [...prevState.sections];
@@ -121,6 +134,26 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
       items[itemIndex] = { ...items[itemIndex], name: e.target.value };
 
       sections[sectionIndex] = { ...sections[sectionIndex], items };
+
+      if (itemIndex === items.length - 1) {
+        items.push({
+          name: '',
+          order: items.sort((a, b) => a.order - b.order)[items.length - 1].order + 1,
+        });
+
+        if (sectionIndex === sections.length - 1) {
+          sections.push({
+            name: '',
+            order: sections.sort((a, b) => a.order - b.order)[sections.length - 1].order + 1,
+            items: [
+              {
+                name: '',
+                order: 0,
+              },
+            ],
+          });
+        }
+      }
 
       return { ...prevState, sections };
     });
@@ -148,10 +181,104 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
     });
   };
 
+  const handleSectionItemDrop = (dragItem, dropItem) => {
+    setChecklist((prevState) => {
+      const sections = [...prevState.sections];
+
+      if (dragItem.sectionIndex === dropItem.sectionIndex) {
+        const items = [...sections[dragItem.sectionIndex].items];
+
+        const dragItemObject = items.splice(dragItem.itemIndex, 1)[0];
+
+        items.splice(dropItem.itemIndex, 0, dragItemObject);
+
+        for (let i = 0; i < items.length; i++) {
+          items[i] = { ...items[i], order: i };
+        }
+
+        sections[dragItem.sectionIndex] = { ...sections[dragItem.sectionIndex], items };
+      } else {
+        const dragItems = [...sections[dragItem.sectionIndex].items];
+
+        const dragItemObject = dragItems.splice(dragItem.itemIndex, 1)[0];
+
+        const dropItems = [...sections[dropItem.sectionIndex].items];
+
+        dropItems.splice(dropItem.itemIndex + 1, 0, dragItemObject);
+
+        for (let i = 0; i < dragItems.length; i++) {
+          dragItems[i] = { ...dragItems[i], order: i };
+        }
+
+        for (let i = 0; i < dropItems.length; i++) {
+          dropItems[i] = { ...dropItems[i], order: i };
+        }
+
+        sections[dragItem.sectionIndex] = { ...sections[dragItem.sectionIndex], items: dragItems };
+
+        sections[dropItem.sectionIndex] = { ...sections[dropItem.sectionIndex], items: dropItems };
+      }
+
+      return { ...prevState, sections };
+    });
+  };
+
+  const handleSectionDrop = (dragIndex, dropIndex) => {
+    setChecklist((prevState) => {
+      const sections = [...prevState.sections];
+
+      const dragSection = sections.splice(dragIndex, 1)[0];
+
+      sections.splice(dropIndex, 0, dragSection);
+
+      for (let i = 0; i < sections.length; i++) {
+        sections[i] = { ...sections[i], order: i };
+      }
+
+      return { ...prevState, sections };
+    });
+  };
+
+  const dragSectionStart = (e) => {
+    setDragSectionIndex(e.target.dataset.sectionIndex);
+  };
+
+  const dragSectionEnter = (e) => {
+    setDragOverSectionIndex(e.currentTarget.dataset.sectionIndex);
+  };
+
+  const dropSection = () => {
+    if (dragSectionItem) return;
+
+    handleSectionDrop(dragSectionIndex, dragOverSectionIndex);
+    setDragSectionIndex(null);
+    setDragOverSectionIndex(null);
+  };
+
+  const dragSectionItemStart = (e) => {
+    setDragSectionItem({
+      sectionIndex: parseInt(e.target.dataset.sectionIndex, 10),
+      itemIndex: parseInt(e.target.dataset.itemIndex, 10),
+    });
+  };
+
+  const dragSectionItemEnter = (e) => {
+    setDragOverSectionItem({
+      sectionIndex: parseInt(e.currentTarget.dataset.sectionIndex, 10),
+      itemIndex: parseInt(e.currentTarget.dataset.itemIndex, 10),
+    });
+  };
+
+  const dropSectionItem = () => {
+    handleSectionItemDrop(dragSectionItem, dragOverSectionItem);
+    setDragSectionItem(null);
+    setDragOverSectionItem(null);
+  };
+
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles['form-main']}>
-        <div className={styles['form-main-header']}>
+      <div className={`${styles['form-main']} ${styles['form-main-header']}`}>
+        <div className={styles['form-main-title']}>
           <label className={styles.label}>Checklist</label>
         </div>
         <input
@@ -162,18 +289,23 @@ const ChecklistForm = ({ submitChecklist, error, existingChecklist, submitButton
           placeholder='Checklist Name'
         />
       </div>
-      {checklist.sections.map((section, sectionIndex) => (
+      {checklist.sections.map((section, sectionIndex, sections) => (
         <ChecklistFormSection
           key={`section-${sectionIndex}`}
           section={section}
           sectionIndex={sectionIndex}
-          handleAddSection={handleAddSection}
           handleRemoveSection={handleRemoveSection}
           handleDuplicateSection={handleDuplicateSection}
           handleSetSectionName={handleSetSectionName}
-          handleAddItem={handleAddItem}
           handleRemoveItem={handleRemoveItem}
           handleSetItemName={handleSetItemName}
+          dragSectionStart={dragSectionStart}
+          dragSectionEnter={dragSectionEnter}
+          dropSection={dropSection}
+          lastSection={sectionIndex === sections.length - 1}
+          dragSectionItemStart={dragSectionItemStart}
+          dragSectionItemEnter={dragSectionItemEnter}
+          dropSectionItem={dropSectionItem}
         />
       ))}
       <div className={styles['form-footer']}>
