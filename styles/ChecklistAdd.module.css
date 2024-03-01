@@ -18,6 +18,12 @@
   padding: 2.5rem 0;
 }
 
+.logo {
+  margin: 0 auto;
+  display: block;
+  width: 18rem;
+}
+
 .a {
   display: inline-block;
   text-decoration: none;
