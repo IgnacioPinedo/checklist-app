@@ -4,4 +4,4 @@
 
 ## Issues
 
-- [Issue #XXXX](https://github.com/IgnacioPinedo/checklist-app/issues/XXXX)
+- Fixes [Issue #XXXX](https://github.com/IgnacioPinedo/checklist-app/issues/XXXX)

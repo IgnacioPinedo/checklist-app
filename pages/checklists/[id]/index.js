@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -41,6 +42,8 @@ export default function Index() {
           <Link className={styles.a} href='/'>
             <span className='material-symbols-outlined'>home</span>
           </Link>
+          <br />
+          <img src='/logo-horizontal.svg' alt='Checklister Logo' className={styles.logo} />
           <h1 className={styles.h1}>{checklist.name}</h1>
           <Checklist checklist={checklist} />
         </div>
