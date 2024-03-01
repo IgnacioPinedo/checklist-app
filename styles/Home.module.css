@@ -23,9 +23,10 @@
   justify-content: space-between;
 }
 
-.h1 {
+.logo {
   display: flex;
   justify-content: flex-start;
+  width: 18rem;
 }
 
 .button {
@@ -77,8 +78,8 @@
     padding: 1rem 2rem;
   }
 
-  .h1 {
-    font-size: 1.5rem;
+  .logo{
+    width: 12rem;
   }
 
   .a {
