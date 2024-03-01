@@ -6,8 +6,6 @@ export default function Document() {
       <Head>
         <meta charset='UTF-8' />
 
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
-
         <meta name='description' content='A simple checklist app that allows you to create, edit, duplicate and delete checklists. It also allows you to check off items on your checklist and uncheck them.' />
 
         <link rel='preconnect' href='https://fonts.googleapis.com' />
