@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const connectDB = (handler) => async (req, res) => {
+  console.log('connectDB middleware');
   if (mongoose.connections[0].readyState) {
     return handler(req, res);
   }

@@ -3,6 +3,7 @@ import Cookies from 'cookies';
 
 export const protect = (handler) => async (req, res) => {
   try {
+    console.log('protect middleware');
     const cookies = new Cookies(req, res);
 
     let token;
@@ -14,6 +15,7 @@ export const protect = (handler) => async (req, res) => {
     }
 
     if (!token) {
+      console.log('No token');
       return res.status(401).json({
         status: 'error',
         data: {
@@ -25,6 +27,7 @@ export const protect = (handler) => async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     if (decoded.admin !== true) {
+      console.log('Not admin');
       return res.status(401).json({
         status: 'error',
         data: {

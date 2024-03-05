@@ -9,6 +9,8 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'POST':
+        console.log('POST /api/v1/checklists/[id]/duplicate');
+
         return await protect(async (req, res) => {
           const id = await duplicateChecklist(req.query.id);
 
@@ -23,6 +25,8 @@ const handler = async (req, res) => {
         return res.status(404).json({});
     }
   } catch (err) {
+    console.error(err);
+
     if (err.internalError)
       return res.status(err.status).json({
         status: 'error',
@@ -31,7 +35,6 @@ const handler = async (req, res) => {
         },
       });
 
-    console.error(err);
     return res.status(500).json({
       status: 'error',
       data: {

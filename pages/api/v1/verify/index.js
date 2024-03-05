@@ -5,6 +5,8 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
+        console.log('GET /api/v1/verify');
+
         return await protect(async (req, res) => {
           return res.status(200).json({
             status: 'success',
@@ -17,6 +19,8 @@ const handler = async (req, res) => {
         return res.status(404).json({});
     }
   } catch (err) {
+    console.error(err);
+
     if (err.internalError)
       return res.status(err.status).json({
         status: 'error',
@@ -25,7 +29,6 @@ const handler = async (req, res) => {
         },
       });
 
-    console.error(err);
     return res.status(500).json({
       status: 'error',
       data: {

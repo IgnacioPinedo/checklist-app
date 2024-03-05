@@ -7,7 +7,15 @@ import ChecklistItem from 'models/checklistItemModel';
 import { validateChecklistBody } from 'utils/validation';
 
 export async function getChecklists() {
-  return (await Checklist.find({})).map((checklist) => {
+  console.log('getChecklists');
+
+  console.log('Fetching checklists');
+
+  const checklists = await Checklist.find({});
+
+  console.log(`Fetched ${checklists.length} checklists, transforming`);
+
+  return checklists.map((checklist) => {
     return checklist.toObject({
       versionKey: false,
       transform: (doc, ret) => {
@@ -18,12 +26,20 @@ export async function getChecklists() {
       },
     });
   });
+
+  console.log('Transformed checklists');
 }
 
 export async function getChecklist(id) {
+  console.log('getChecklist');
+
+  console.log('Fetching checklist');
+
   let checklist = await Checklist.findById(id);
 
-  if (!checklist)
+  if (!checklist) {
+    console.log(`There's no checklist with this ID`);
+
     throw {
       internalError: true,
       status: 404,
@@ -31,6 +47,9 @@ export async function getChecklist(id) {
         error: "There's no checklist with this ID",
       },
     };
+  }
+
+  console.log(`Fetched checklist with ID ${id}, transforming`)
 
   checklist = checklist.toObject({
     versionKey: false,
@@ -42,9 +61,13 @@ export async function getChecklist(id) {
     },
   });
 
+  console.log('Transformed checklist, fetching sections');
+
   let checklistSections = await ChecklistSection.find({ checklist: checklist.id }).sort({
     order: 'asc',
   });
+
+  console.log(`Fetched ${checklistSections.length} sections, transforming`);
 
   checklist.sections = await Promise.all(
     checklistSections.map(async (checklistSection) => {
@@ -80,13 +103,21 @@ export async function getChecklist(id) {
     }),
   );
 
+  console.log('Transformed sections');
+
   return checklist;
 }
 
 export async function createChecklist(body) {
+  console.log('createChecklist');
+
+  console.log('Validating body');
+
   const validationError = validateChecklistBody(body);
 
-  if (validationError != '')
+  if (validationError != '') {
+    console.log('Validation error');
+
     throw {
       internalError: true,
       status: 400,
@@ -94,17 +125,28 @@ export async function createChecklist(body) {
         error: validationError,
       },
     };
+  }
+
+  console.log('Validated body, creating checklist');
 
   const checklist = await Checklist.create({
     name: body.name,
   });
 
+  console.log('Created checklist, creating sections');
+
   await createChecklistSections(checklist.id, body.sections);
+
+  console.log('Created sections');
 
   return checklist.id;
 }
 
 const createChecklistSections = async (id, sections) => {
+  console.log('createChecklistSections');
+
+  console.log('Creating sections');
+
   await Promise.all(
     sections.map(async (section) => {
       const checklistSection = await ChecklistSection.create({
@@ -124,12 +166,20 @@ const createChecklistSections = async (id, sections) => {
       );
     }),
   );
+
+  console.log('Created sections');
 };
 
 export async function updateChecklist(id, body) {
+  console.log('updateChecklist');
+
+  console.log('Validating body');
+
   const validationError = validateChecklistBody(body);
 
-  if (validationError != '')
+  if (validationError != '') {
+    console.log('Validation error');
+
     throw {
       internalError: true,
       status: 400,
@@ -137,10 +187,15 @@ export async function updateChecklist(id, body) {
         error: validationError,
       },
     };
+  }
+
+  console.log('Validated body, fetching checklist');
 
   const checklist = await Checklist.findById(id);
 
-  if (!checklist)
+  if (!checklist) {
+    console.log(`There's no checklist with this ID`);
+
     throw {
       internalError: true,
       status: 404,
@@ -148,20 +203,35 @@ export async function updateChecklist(id, body) {
         error: "There's no checklist with this ID",
       },
     };
+  }
+
+  console.log('Fetched checklist, updating');
 
   checklist.name = body.name;
 
   await checklist.save();
 
+  console.log('Updated checklist, deleting sections');
+
   await deleteChecklistSections(checklist._id);
 
+  console.log('Deleted sections, creating sections');
+
   await createChecklistSections(checklist.id, body.sections);
+
+  console.log('Created sections');
 }
 
 export async function deleteChecklist(id) {
+  console.log('deleteChecklist');
+
+  console.log('Fetching checklist');
+
   const checklist = await Checklist.findById(id);
 
-  if (!checklist)
+  if (!checklist) {
+    console.log(`There's no checklist with this ID`);
+
     throw {
       internalError: true,
       status: 404,
@@ -169,14 +239,27 @@ export async function deleteChecklist(id) {
         error: "There's no checklist with this ID",
       },
     };
+  }
+
+  console.log('Fetched checklist, deleting sections');
 
   await deleteChecklistSections(checklist._id);
 
+  console.log('Deleted sections, deleting checklist');
+
   await checklist.deleteOne();
+
+  console.log('Deleted checklist');
 }
 
 const deleteChecklistSections = async (id) => {
+  console.log('deleteChecklistSections');
+
+  console.log('Fetching sections');
+
   let checklistSections = await ChecklistSection.find({ checklist: id });
+
+  console.log(`Fetched ${checklistSections.length} sections, deleting items`);
 
   await Promise.all(
     checklistSections.map(async (checklistSection) => {
@@ -186,13 +269,23 @@ const deleteChecklistSections = async (id) => {
     }),
   );
 
+  console.log('Deleted items, deleting sections');
+
   await ChecklistSection.deleteMany({ checklist: id });
+
+  console.log('Deleted sections');
 };
 
 export async function duplicateChecklist(id) {
+  console.log('duplicateChecklist');
+
+  console.log('Fetching checklist');
+
   const checklist = await Checklist.findById(id);
 
-  if (!checklist)
+  if (!checklist) {
+    console.log(`There's no checklist with this ID`);
+
     throw {
       internalError: true,
       status: 404,
@@ -200,14 +293,21 @@ export async function duplicateChecklist(id) {
         error: "There's no checklist with this ID",
       },
     };
+  }
+
+  console.log('Fetched checklist, duplicating checklist');
 
   const newChecklist = await Checklist.create({
     name: `${checklist.name} (Copy)`,
   });
 
+  console.log('Duplicated checklist, fetching sections to duplicate');
+
   const checklistSections = await ChecklistSection.find({ checklist: checklist.id }).sort({
     order: 'asc',
   });
+
+  console.log(`Fetched ${checklistSections.length} sections, duplicating`);
 
   await Promise.all(
     checklistSections.map(async (checklistSection) => {
@@ -232,6 +332,8 @@ export async function duplicateChecklist(id) {
       );
     }),
   );
+
+  console.log('Duplicated sections');
 
   return newChecklist.id;
 }

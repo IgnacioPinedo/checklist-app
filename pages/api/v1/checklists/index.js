@@ -9,6 +9,8 @@ const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
+        console.log('GET /api/v1/checklists');
+
         const checklists = await getChecklists();
 
         return res.status(200).json({
@@ -19,6 +21,8 @@ const handler = async (req, res) => {
         });
 
       case 'POST':
+        console.log('POST /api/v1/checklists');
+
         return await protect(async (req, res) => {
           const id = await createChecklist(req.body);
 
@@ -33,6 +37,8 @@ const handler = async (req, res) => {
         return res.status(404).json({});
     }
   } catch (err) {
+    console.error(err);
+
     if (err.internalError)
       return res.status(err.status).json({
         status: 'error',
@@ -41,7 +47,6 @@ const handler = async (req, res) => {
         },
       });
 
-    console.error(err);
     return res.status(500).json({
       status: 'error',
       data: {
