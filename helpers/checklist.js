@@ -15,7 +15,7 @@ export async function getChecklists() {
 
   console.log(`Fetched ${checklists.length} checklists, transforming`);
 
-  return checklists.map((checklist) => {
+  const transformedChecklists = checklists.map((checklist) => {
     return checklist.toObject({
       versionKey: false,
       transform: (doc, ret) => {
@@ -28,6 +28,8 @@ export async function getChecklists() {
   });
 
   console.log('Transformed checklists');
+
+  return transformedChecklists;
 }
 
 export async function getChecklist(id) {
