@@ -49,8 +49,6 @@ export default function Index() {
       setError(data.data.error);
       setTimeout(() => setError(''), 5000);
     }
-
-    console.log(checklist);
   };
 
   return (

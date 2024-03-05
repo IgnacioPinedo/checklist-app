@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <meta charset='UTF-8' />
+        <meta charSet='UTF-8' />
 
         <meta name='description' content='A simple checklist app that allows you to create, edit, duplicate and delete checklists. It also allows you to check off items on your checklist and uncheck them.' />
 
