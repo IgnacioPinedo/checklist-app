@@ -28,11 +28,11 @@ export default function Index() {
     });
   }, []);
 
-  const handleDeleteChecklist = async (id) => {
-    const response = await fetch(`/api/v1/checklists/${id}`, { method: 'DELETE' });
+  const handleDeleteChecklist = async (slug) => {
+    const response = await fetch(`/api/v1/checklists/${slug}`, { method: 'DELETE' });
 
     if (response.ok) {
-      const newChecklists = checklists.filter((checklist) => checklist.id !== id);
+      const newChecklists = checklists.filter((checklist) => checklist.slug !== slug);
       setChecklists(newChecklists);
     } else {
       const data = await response.json();
@@ -41,12 +41,12 @@ export default function Index() {
     }
   };
 
-  const handleDuplicateChecklist = async (id) => {
-    const response = await fetch(`/api/v1/checklists/${id}/duplicate`, { method: 'POST' });
+  const handleDuplicateChecklist = async (slug) => {
+    const response = await fetch(`/api/v1/checklists/${slug}/duplicate`, { method: 'POST' });
 
     if (response.ok) {
       const data = await response.json();
-      router.push(`/checklists/${data.data.id}`);
+      router.push(`/checklists/${data.data.slug}`);
     } else {
       const data = await response.json();
       setError(data.data.error);
