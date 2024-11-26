@@ -3,33 +3,33 @@ import connectDB from 'middleware/mongodb';
 import { protect } from 'middleware/auth';
 
 // Helpers
-import { getChecklist, updateChecklist, deleteChecklist } from 'helpers/checklist';
+import { getChecklistBySlug, updateChecklistBySlug, deleteChecklistBySlug } from 'helpers/checklist';
 
 const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
-        console.log('GET /api/v1/checklists/[id]');
+        console.log('GET /api/v1/checklists/[slug]');
 
-        const checklist = await getChecklist(req.query.id);
+        const checklist = await getChecklistBySlug(req.query.slug);
 
         return res.status(200).json({
           status: 'success',
           data: { checklist },
         });
       case 'PUT':
-        console.log('PUT /api/v1/checklists/[id]');
+        console.log('PUT /api/v1/checklists/[slug]');
 
         return await protect(async (req, res) => {
-          await updateChecklist(req.query.id, req.body);
+          await updateChecklistBySlug(req.query.slug, req.body);
 
           return res.status(204).json();
         })(req, res);
       case 'DELETE':
-        console.log('DELETE /api/v1/checklists/[id]');
+        console.log('DELETE /api/v1/checklists/[slug]');
 
         return await protect(async (req, res) => {
-          await deleteChecklist(req.query.id);
+          await deleteChecklistBySlug(req.query.slug);
 
           return res.status(204).json();
         })(req, res);

@@ -4,20 +4,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Checklist from 'src/Checklist';
-import styles from 'styles/ChecklistId.module.css';
+import styles from 'styles/ChecklistSlug.module.css';
 
 export default function Index() {
   const router = useRouter();
   const [checklist, setChecklist] = useState(undefined);
 
-  const { id: checklistId } = router.query;
+  const { slug: checklistSlug } = router.query;
 
   useEffect(() => {
-    if (!checklistId) {
+    if (!checklistSlug) {
       return;
     }
 
-    fetch(`/api/v1/checklists/${checklistId}`).then((response) => {
+    fetch(`/api/v1/checklists/${checklistSlug}`).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
           setChecklist(data.data.checklist);
@@ -26,7 +26,7 @@ export default function Index() {
         router.push('/');
       }
     });
-  }, [checklistId, router]);
+  }, [checklistSlug, router]);
 
   if (!checklist) {
     return null;

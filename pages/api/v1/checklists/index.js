@@ -24,12 +24,12 @@ const handler = async (req, res) => {
         console.log('POST /api/v1/checklists');
 
         return await protect(async (req, res) => {
-          const id = await createChecklist(req.body);
+          const slug = await createChecklist(req.body);
 
           return res.status(201).json({
             status: 'success',
             data: {
-              id,
+              slug,
             },
           });
         })(req, res);

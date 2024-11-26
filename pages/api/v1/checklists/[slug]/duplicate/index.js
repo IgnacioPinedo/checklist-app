@@ -3,21 +3,21 @@ import connectDB from 'middleware/mongodb';
 import { protect } from 'middleware/auth';
 
 // Helpers
-import { duplicateChecklist } from 'helpers/checklist';
+import { duplicateChecklistBySlug } from 'helpers/checklist';
 
 const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'POST':
-        console.log('POST /api/v1/checklists/[id]/duplicate');
+        console.log('POST /api/v1/checklists/[slug]/duplicate');
 
         return await protect(async (req, res) => {
-          const id = await duplicateChecklist(req.query.id);
+          const slug = await duplicateChecklistBySlug(req.query.slug);
 
           return res.status(201).json({
             status: 'success',
             data: {
-              id,
+              slug,
             },
           });
         })(req, res);

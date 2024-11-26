@@ -21,7 +21,7 @@ export default function Index() {
 
     if (response.ok) {
       const data = await response.json();
-      router.push(`/checklists/${data.data.id}`);
+      router.push(`/checklists/${data.data.slug}`);
     } else {
       const data = await response.json();
       setError(data.data.error);

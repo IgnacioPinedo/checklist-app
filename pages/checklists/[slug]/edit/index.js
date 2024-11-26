@@ -11,14 +11,14 @@ export default function Index() {
   const [error, setError] = useState('');
   const [existingChecklist, setExistingChecklist] = useState(null);
 
-  const { id: checklistId } = router.query;
+  const { slug: checklistSlug } = router.query;
 
   useEffect(() => {
-    if (!checklistId) {
+    if (!checklistSlug) {
       return;
     }
 
-    fetch(`/api/v1/checklists/${checklistId}`).then((response) => {
+    fetch(`/api/v1/checklists/${checklistSlug}`).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
           setExistingChecklist(data.data.checklist);
@@ -27,14 +27,14 @@ export default function Index() {
         router.push('/');
       }
     });
-  }, [checklistId, router]);
+  }, [checklistSlug, router]);
 
   if (!existingChecklist) {
     return null;
   }
 
   const handleUpdateChecklist = async (checklist) => {
-    const response = await fetch(`/api/v1/checklists/${checklistId}`, {
+    const response = await fetch(`/api/v1/checklists/${checklistSlug}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export default function Index() {
     });
 
     if (response.ok) {
-      router.push(`/checklists/${checklistId}`);
+      router.push(`/checklists/${checklistSlug}`);
     } else {
       const data = await response.json();
       setError(data.data.error);

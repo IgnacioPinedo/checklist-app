@@ -3,50 +3,50 @@ import styles from 'styles/ChecklistList.module.css';
 import DeleteChecklistPopup from 'src/DeleteChecklistPopup';
 
 const ChecklistList = (props) => {
-  const [deleteId, setDeleteId] = useState(null);
+  const [deleteSlug, setDeleteSlug] = useState(null);
   const { checklists, isAdmin, deleteChecklist, duplicateChecklist } = props;
 
-  const handleDeleteChecklist = (id) => {
-    setDeleteId(id);
+  const handleDeleteChecklist = (slug) => {
+    setDeleteSlug(slug);
   };
 
-  const handleDuplicateChecklist = (id) => {
-    duplicateChecklist(id);
+  const handleDuplicateChecklist = (slug) => {
+    duplicateChecklist(slug);
   };
 
   return (
     <div>
-      {deleteId && (
+      {deleteSlug && (
         <DeleteChecklistPopup
-          id={deleteId}
-          checklistName={checklists.find((checklist) => checklist.id === deleteId).name}
+          slug={deleteSlug}
+          checklistName={checklists.find((checklist) => checklist.slug === deleteSlug).name}
           deleteChecklist={() => {
-            setDeleteId(null);
-            deleteChecklist(deleteId);
+            setDeleteSlug(null);
+            deleteChecklist(deleteSlug);
           }}
-          cancel={() => setDeleteId(null)}
+          cancel={() => setDeleteSlug(null)}
         />
       )}
       {checklists.map((checklist) => (
         <>
           <div className={styles['list-item']}>
-            <a key={checklist.id} className={styles.a} href={`/checklists/${checklist.id}`}>
-              <h2 key={checklist.id}>{checklist.name}</h2>
+            <a key={checklist.slug} className={styles.a} href={`/checklists/${checklist.slug}`}>
+              <h2 key={checklist.slug}>{checklist.name}</h2>
             </a>
             {isAdmin && (
               <div className={styles['list-icons']}>
-                <a href={`/checklists/${checklist.id}/edit`}>
+                <a href={`/checklists/${checklist.slug}/edit`}>
                   <span className='material-symbols-outlined'>edit</span>
                 </a>
                 <span
                   className='material-symbols-outlined'
-                  onClick={() => handleDuplicateChecklist(checklist.id)}
+                  onClick={() => handleDuplicateChecklist(checklist.slug)}
                 >
                   content_copy
                 </span>
                 <span
                   className='material-symbols-outlined'
-                  onClick={() => handleDeleteChecklist(checklist.id)}
+                  onClick={() => handleDeleteChecklist(checklist.slug)}
                   style={{
                     color: '#C9101C',
                   }}

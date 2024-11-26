@@ -8,6 +8,10 @@ const checklistSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A checklist needs a name'],
     },
+    slug: {
+      type: String,
+      required: [true, 'A checklist needs a slug'],
+    },
     // description: {
     //   type: String,
     //   required: [true, 'A checklist needs a description'],

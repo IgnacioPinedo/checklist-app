@@ -6,6 +6,10 @@ import ChecklistItem from 'models/checklistItemModel';
 // Utils
 import { validateChecklistBody } from 'utils/validation';
 
+// Packages
+import slugify from 'slugify';
+import mongoose from 'mongoose';
+
 export async function getChecklists() {
   console.log('getChecklists');
 
@@ -32,26 +36,26 @@ export async function getChecklists() {
   return transformedChecklists;
 }
 
-export async function getChecklist(id) {
-  console.log('getChecklist');
+export async function getChecklistBySlug(slug) {
+  console.log('getChecklistBySlug');
 
   console.log('Fetching checklist');
 
-  let checklist = await Checklist.findById(id);
+  let checklist = await Checklist.findOne({ slug });
 
   if (!checklist) {
-    console.log(`There's no checklist with this ID`);
+    console.log(`There's no checklist with this slug`);
 
     throw {
       internalError: true,
       status: 404,
       data: {
-        error: "There's no checklist with this ID",
+        error: "There's no checklist with this slug",
       },
     };
   }
 
-  console.log(`Fetched checklist with ID ${id}, transforming`)
+  console.log(`Fetched checklist with slug ${checklist.slug}, transforming`);
 
   checklist = checklist.toObject({
     versionKey: false,
@@ -129,19 +133,39 @@ export async function createChecklist(body) {
     };
   }
 
+  const slug = slugify(body.name, {
+    lower: true,
+    strict: true,
+  });
+
+  const conflictingSlug = await Checklist.findOne({ slug: slug });
+
+  if (conflictingSlug) {
+    console.log('Conflicting slug');
+
+    throw {
+      internalError: true,
+      status: 400,
+      data: {
+        error: 'There is already a checklist with this name',
+      },
+    };
+  }
+
   console.log('Validated body, creating checklist');
 
   const checklist = await Checklist.create({
     name: body.name,
+    slug: slug,
   });
 
   console.log('Created checklist, creating sections');
 
-  await createChecklistSections(checklist.id, body.sections);
+  await createChecklistSections(checklist._id, body.sections);
 
   console.log('Created sections');
 
-  return checklist.id;
+  return checklist.slug;
 }
 
 const createChecklistSections = async (id, sections) => {
@@ -162,7 +186,7 @@ const createChecklistSections = async (id, sections) => {
           return await ChecklistItem.create({
             name: item.name,
             order: item.order,
-            checklistSection: checklistSection.id,
+            checklistSection: checklistSection._id,
           });
         }),
       );
@@ -172,8 +196,8 @@ const createChecklistSections = async (id, sections) => {
   console.log('Created sections');
 };
 
-export async function updateChecklist(id, body) {
-  console.log('updateChecklist');
+export async function updateChecklistBySlug(slug, body) {
+  console.log('updateChecklistBySlug');
 
   console.log('Validating body');
 
@@ -193,23 +217,46 @@ export async function updateChecklist(id, body) {
 
   console.log('Validated body, fetching checklist');
 
-  const checklist = await Checklist.findById(id);
+  const checklist = await Checklist.findOne({ slug });
 
   if (!checklist) {
-    console.log(`There's no checklist with this ID`);
+    console.log(`There's no checklist with this slug`);
 
     throw {
       internalError: true,
       status: 404,
       data: {
-        error: "There's no checklist with this ID",
+        error: "There's no checklist with this slug",
       },
     };
   }
 
   console.log('Fetched checklist, updating');
 
+  const updatedSlug = slugify(body.name, {
+    lower: true,
+    strict: true,
+  });
+
+  const conflictingSlug = await Checklist.findOne({
+    slug: updatedSlug,
+    _id: { $ne: checklist._id },
+  });
+
+  if (conflictingSlug) {
+    console.log('Conflicting slug');
+
+    throw {
+      internalError: true,
+      status: 400,
+      data: {
+        error: 'There is already a checklist with this name',
+      },
+    };
+  }
+
   checklist.name = body.name;
+  checklist.slug = updatedSlug;
 
   await checklist.save();
 
@@ -219,26 +266,26 @@ export async function updateChecklist(id, body) {
 
   console.log('Deleted sections, creating sections');
 
-  await createChecklistSections(checklist.id, body.sections);
+  await createChecklistSections(checklist._id, body.sections);
 
   console.log('Created sections');
 }
 
-export async function deleteChecklist(id) {
-  console.log('deleteChecklist');
+export async function deleteChecklistBySlug(slug) {
+  console.log('deleteChecklistBySlug');
 
   console.log('Fetching checklist');
 
-  const checklist = await Checklist.findById(id);
+  const checklist = await Checklist.findOne({ slug });
 
   if (!checklist) {
-    console.log(`There's no checklist with this ID`);
+    console.log(`There's no checklist with this slug`);
 
     throw {
       internalError: true,
       status: 404,
       data: {
-        error: "There's no checklist with this ID",
+        error: "There's no checklist with this slug",
       },
     };
   }
@@ -278,34 +325,58 @@ const deleteChecklistSections = async (id) => {
   console.log('Deleted sections');
 };
 
-export async function duplicateChecklist(id) {
-  console.log('duplicateChecklist');
+export async function duplicateChecklistBySlug(slug) {
+  console.log('duplicateChecklistBySlug');
 
   console.log('Fetching checklist');
 
-  const checklist = await Checklist.findById(id);
+  const checklist = await Checklist.findOne({ slug });
 
   if (!checklist) {
-    console.log(`There's no checklist with this ID`);
+    console.log(`There's no checklist with this slug`);
 
     throw {
       internalError: true,
       status: 404,
       data: {
-        error: "There's no checklist with this ID",
+        error: "There's no checklist with this slug",
       },
     };
   }
 
   console.log('Fetched checklist, duplicating checklist');
 
+  const copyName = `${checklist.name} (Copy)`;
+  const copySlug = slugify(copyName, {
+    lower: true,
+    strict: true,
+  });
+
+  const conflictingSlug = await Checklist.findOne({
+    slug: copySlug,
+    _id: { $ne: checklist._id },
+  });
+
+  if (conflictingSlug) {
+    console.log('Conflicting slug');
+
+    throw {
+      internalError: true,
+      status: 400,
+      data: {
+        error: 'There is already a checklist with this name',
+      },
+    };
+  }
+
   const newChecklist = await Checklist.create({
-    name: `${checklist.name} (Copy)`,
+    name: copyName,
+    slug: copySlug,
   });
 
   console.log('Duplicated checklist, fetching sections to duplicate');
 
-  const checklistSections = await ChecklistSection.find({ checklist: checklist.id }).sort({
+  const checklistSections = await ChecklistSection.find({ checklist: checklist._id }).sort({
     order: 'asc',
   });
 
@@ -316,11 +387,11 @@ export async function duplicateChecklist(id) {
       const newChecklistSection = await ChecklistSection.create({
         name: checklistSection.name,
         order: checklistSection.order,
-        checklist: newChecklist.id,
+        checklist: newChecklist._id,
       });
 
       const checklistItems = await ChecklistItem.find({
-        checklistSection: checklistSection.id,
+        checklistSection: checklistSection._id,
       }).sort({ order: 'asc' });
 
       await Promise.all(
@@ -328,7 +399,7 @@ export async function duplicateChecklist(id) {
           await ChecklistItem.create({
             name: checklistItem.name,
             order: checklistItem.order,
-            checklistSection: newChecklistSection.id,
+            checklistSection: newChecklistSection._id,
           });
         }),
       );
@@ -337,5 +408,5 @@ export async function duplicateChecklist(id) {
 
   console.log('Duplicated sections');
 
-  return newChecklist.id;
+  return newChecklist._id;
 }
