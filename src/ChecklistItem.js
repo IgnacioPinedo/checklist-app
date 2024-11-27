@@ -8,7 +8,7 @@ const ChecklistItem = (props) => {
 
   return (
     <div className={styles.item} onClick={() => setChecked((prevChecked) => !prevChecked)}>
-      <input type='checkbox' className={styles.checkbox} checked={checked || doneAll} />
+      <input type='checkbox' className={styles.checkbox} checked={checked || doneAll} readOnly />
       <h3>{item.name}</h3>
     </div>
   );

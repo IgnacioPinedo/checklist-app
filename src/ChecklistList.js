@@ -28,35 +28,33 @@ const ChecklistList = (props) => {
         />
       )}
       {checklists.map((checklist) => (
-        <>
-          <div className={styles['list-item']}>
-            <a key={checklist.slug} className={styles.a} href={`/checklists/${checklist.slug}`}>
-              <h2 key={checklist.slug}>{checklist.name}</h2>
-            </a>
-            {isAdmin && (
-              <div className={styles['list-icons']}>
-                <a href={`/checklists/${checklist.slug}/edit`}>
-                  <span className='material-symbols-outlined'>edit</span>
-                </a>
-                <span
-                  className='material-symbols-outlined'
-                  onClick={() => handleDuplicateChecklist(checklist.slug)}
-                >
-                  content_copy
-                </span>
-                <span
-                  className='material-symbols-outlined'
-                  onClick={() => handleDeleteChecklist(checklist.slug)}
-                  style={{
-                    color: '#C9101C',
-                  }}
-                >
-                  delete
-                </span>
-              </div>
-            )}
-          </div>
-        </>
+        <div key={checklist.slug} className={styles['list-item']}>
+          <a key={checklist.slug} className={styles.a} href={`/checklists/${checklist.slug}`}>
+            <h2 key={checklist.slug}>{checklist.name}</h2>
+          </a>
+          {isAdmin && (
+            <div className={styles['list-icons']}>
+              <a href={`/checklists/${checklist.slug}/edit`}>
+                <span className='material-symbols-outlined'>edit</span>
+              </a>
+              <span
+                className='material-symbols-outlined'
+                onClick={() => handleDuplicateChecklist(checklist.slug)}
+              >
+                content_copy
+              </span>
+              <span
+                className='material-symbols-outlined'
+                onClick={() => handleDeleteChecklist(checklist.slug)}
+                style={{
+                  color: '#C9101C',
+                }}
+              >
+                delete
+              </span>
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );
