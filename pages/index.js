@@ -60,9 +60,9 @@ export default function Index() {
   const [sorting, setSorting] = useState(allowedSortingValues[0]);
 
   useEffect(() => {
-    fetch(
-      `/api/v1/checklists?sort_by=${sorting.value.sortBy}&order_by=${sorting.value.orderBy}`,
-    ).then((response) => {
+    fetch(`/api/v1/checklists?sort_by=${sorting.value.sortBy}&order_by=${sorting.value.orderBy}`, {
+      cache: 'no-store',
+    }).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
           setChecklists(data.data.checklists);
