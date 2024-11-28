@@ -10,12 +10,14 @@ import { validateChecklistBody } from 'utils/validation';
 import slugify from 'slugify';
 import mongoose from 'mongoose';
 
-export async function getChecklists() {
+export async function getChecklists(sort_by = 'createdAt', order_by = 'asc') {
   console.log('getChecklists');
 
   console.log('Fetching checklists');
 
-  const checklists = await Checklist.find({});
+  const checklists = await Checklist.find({}).sort({
+    [sort_by]: order_by,
+  });
 
   console.log(`Fetched ${checklists.length} checklists, transforming`);
 

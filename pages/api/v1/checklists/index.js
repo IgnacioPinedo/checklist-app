@@ -5,13 +5,36 @@ import { protect } from 'middleware/auth';
 // Helpers
 import { getChecklists, createChecklist } from 'helpers/checklist';
 
+const allowedSortBy = ['name', 'createdAt', 'updatedAt'];
+const allowedOrderBy = ['asc', 'desc'];
+
 const handler = async (req, res) => {
   try {
     switch (req.method) {
       case 'GET':
         console.log('GET /api/v1/checklists');
 
-        const checklists = await getChecklists();
+        const { sort_by, order_by } = req.query;
+
+        if (sort_by && !allowedSortBy.includes(sort_by)) {
+          return res.status(400).json({
+            status: 'error',
+            data: {
+              error: `sort_by must be one of ${allowedSortBy.join(', ')}`,
+            },
+          });
+        }
+
+        if (order_by && !allowedOrderBy.includes(order_by)) {
+          return res.status(400).json({
+            status: 'error',
+            data: {
+              error: `order_by must be one of ${allowedOrderBy.join(', ')}`,
+            },
+          });
+        }
+
+        const checklists = await getChecklists(sort_by, order_by);
 
         return res.status(200).json({
           status: 'success',
