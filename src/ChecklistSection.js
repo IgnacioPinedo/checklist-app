@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import ChecklistItem from 'src/ChecklistItem';
 import styles from 'styles/ChecklistSection.module.css';
 
