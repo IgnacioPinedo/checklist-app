@@ -4,23 +4,72 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import ChecklistList from 'src/ChecklistList';
+import Dropdown from 'src/Dropdown';
 import styles from 'styles/Home.module.css';
+
+const allowedSortingValues = [
+  {
+    name: 'Name (A-Z)',
+    value: {
+      sortBy: 'name',
+      orderBy: 'asc',
+    },
+  },
+  {
+    name: 'Name (Z-A)',
+    value: {
+      sortBy: 'name',
+      orderBy: 'desc',
+    },
+  },
+  {
+    name: 'Created (Oldest-Newest)',
+    value: {
+      sortBy: 'createdAt',
+      orderBy: 'asc',
+    },
+  },
+  {
+    name: 'Created (Newest-Oldest)',
+    value: {
+      sortBy: 'createdAt',
+      orderBy: 'desc',
+    },
+  },
+  {
+    name: 'Updated (Oldest-Newest)',
+    value: {
+      sortBy: 'updatedAt',
+      orderBy: 'asc',
+    },
+  },
+  {
+    name: 'Updated (Newest-Oldest)',
+    value: {
+      sortBy: 'updatedAt',
+      orderBy: 'desc',
+    },
+  },
+];
 
 export default function Index() {
   const router = useRouter();
   const [checklists, setChecklists] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState('');
+  const [sorting, setSorting] = useState(allowedSortingValues[0]);
 
   useEffect(() => {
-    fetch('/api/v1/checklists').then((response) => {
+    fetch(
+      `/api/v1/checklists?sort_by=${sorting.value.sortBy}&order_by=${sorting.value.orderBy}`,
+    ).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
           setChecklists(data.data.checklists);
         });
       }
     });
-  }, []);
+  }, [sorting]);
 
   useEffect(() => {
     fetch('/api/v1/verify').then((response) => {
@@ -74,6 +123,7 @@ export default function Index() {
               </Link>
             )}
           </div>
+          <Dropdown possibleValues={allowedSortingValues} value={sorting} setValue={setSorting} />
           <ChecklistList
             checklists={checklists}
             isAdmin={isAdmin}
