@@ -20,7 +20,17 @@ export default function Index() {
     fetch(`/api/v1/checklists/${checklistSlug}`).then((response) => {
       if (response.ok) {
         response.json().then((data) => {
-          setChecklist(data.data.checklist);
+          setChecklist({
+            ...data.data.checklist,
+            sections: data.data.checklist.sections.map((section) => ({
+              ...section,
+              collapsed: false,
+              items: section.items.map((item) => ({
+                ...item,
+                checked: false,
+              })),
+            })),
+          });
         });
       } else {
         router.push('/');
@@ -31,6 +41,88 @@ export default function Index() {
   if (!checklist) {
     return null;
   }
+
+  const togggleAllSectionCollapse = () => {
+    setChecklist((prevChecklist) => {
+      const newChecklist = {
+        ...prevChecklist,
+        sections: prevChecklist.sections.map((s) => {
+          const section = { ...s };
+
+          section.collapsed = !section.collapsed;
+
+          return section;
+        }),
+      };
+      return newChecklist;
+    });
+  };
+
+  const togggleSectionCollapse = (sectionId) => {
+    setChecklist((prevChecklist) => {
+      const newChecklist = {
+        ...prevChecklist,
+        sections: prevChecklist.sections.map((s) => {
+          const section = { ...s };
+
+          if (section.id === sectionId) section.collapsed = !section.collapsed;
+
+          return section;
+        }),
+      };
+      return newChecklist;
+    });
+  };
+
+  const toggleSectionItemCheck = (sectionId, itemId) => {
+    setChecklist((prevChecklist) => {
+      const newChecklist = {
+        ...prevChecklist,
+        sections: prevChecklist.sections.map((s) => {
+          const section = { ...s };
+
+          if (section.id === sectionId) {
+            section.items = section.items.map((i) => {
+              const item = { ...i };
+
+              if (item.id === itemId) item.checked = !item.checked;
+
+              return item;
+            });
+          }
+
+          return section;
+        }),
+      };
+      return newChecklist;
+    });
+  };
+
+  const toggleSectionDoneAll = (sectionId) => {
+    setChecklist((prevChecklist) => {
+      const newChecklist = {
+        ...prevChecklist,
+        sections: prevChecklist.sections.map((s) => {
+          const section = { ...s };
+
+          if (section.id === sectionId) {
+            const allChecked = section.items.every((i) => i.checked);
+
+            section.items = section.items.map((i) => {
+              const item = { ...i };
+
+              item.checked = !allChecked;
+
+              return item;
+            });
+          }
+
+          return section;
+        }),
+      };
+      return newChecklist;
+    });
+  };
 
   return (
     <>
@@ -45,7 +137,21 @@ export default function Index() {
           <br />
           <img src='/logo-horizontal.svg' alt='Checklister Logo' className={styles.logo} />
           <h1 className={styles.h1}>{checklist.name}</h1>
-          <Checklist checklist={checklist} />
+          {checklist.sections.every((s) => s.collapsed) ? (
+            <span className={`material-symbols-outlined ${styles.collapse}`} onClick={togggleAllSectionCollapse}>
+              expand_less
+            </span>
+          ) : (
+            <span className={`material-symbols-outlined ${styles.collapse}`} onClick={togggleAllSectionCollapse}>
+              expand_more
+            </span>
+          )}
+          <Checklist
+            checklist={checklist}
+            togggleSectionCollapse={togggleSectionCollapse}
+            toggleSectionItemCheck={toggleSectionItemCheck}
+            toggleSectionDoneAll={toggleSectionDoneAll}
+          />
         </div>
       </div>
     </>
