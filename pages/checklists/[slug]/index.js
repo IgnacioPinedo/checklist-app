@@ -44,12 +44,13 @@ export default function Index() {
 
   const togggleAllSectionCollapse = () => {
     setChecklist((prevChecklist) => {
+      const allCollapsed = prevChecklist.sections.every((s) => s.collapsed);
       const newChecklist = {
         ...prevChecklist,
         sections: prevChecklist.sections.map((s) => {
           const section = { ...s };
 
-          section.collapsed = !section.collapsed;
+          section.collapsed = !allCollapsed;
 
           return section;
         }),
